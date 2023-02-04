@@ -11,7 +11,17 @@ public class Student implements Serializable {
     private String faculty;
     private String course;
 
-    //constructor used to create a new Student
+    /**
+     * Constructor used to create a new Student that does not have an ID in the database
+     *
+     * @param fullName
+     * @param matricNo
+     * @param email
+     * @param password
+     * @param faculty
+     * @param course
+     * @param sectionGroup
+     */
     public Student(String fullName, String matricNo, String email, String password, String faculty, String course, String sectionGroup) {
         id = -1;
         this.fullName = fullName;
@@ -23,7 +33,18 @@ public class Student implements Serializable {
         this.sectionGroup = sectionGroup;
     }
 
-    //constructor used to assign existing Student to an instance
+    /**
+     * Constructor used to assign existing Student to an instance
+     *
+     * @param id row ID in the database
+     * @param fullName
+     * @param matricNo
+     * @param email
+     * @param password
+     * @param faculty
+     * @param course
+     * @param sectionGroup
+     */
     public Student(int id, String fullName, String matricNo, String email, String password, String faculty, String course, String sectionGroup) {
         this.id = id;
         this.fullName = fullName;

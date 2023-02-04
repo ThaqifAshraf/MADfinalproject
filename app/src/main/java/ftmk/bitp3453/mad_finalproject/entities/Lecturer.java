@@ -5,26 +5,26 @@ import java.io.Serializable;
 public class Lecturer implements Serializable {
     private int id;
     private String fullName,
-    lecturer_id,
+    staffNo,
     email,
     password,
     department;
 
     //constructor used to create a new Lecturer
-    public Lecturer(String fullName, String lecturer_id, String email, String password, String department) {
+    public Lecturer(String fullName, String staffNo, String email, String password, String department) {
         id = -1;
         this.fullName = fullName;
-        this.lecturer_id = lecturer_id;
+        this.staffNo = staffNo;
         this.email = email;
         this.password = password;
         this.department = department;
     }
 
     //constructor used to assign an existing Lecturer to an instance
-    public Lecturer(int id, String fullName, String lecturer_id, String email, String password, String department) {
+    public Lecturer(int id, String fullName, String staffNo, String email, String password, String department) {
         this.id = id;
         this.fullName = fullName;
-        this.lecturer_id = lecturer_id;
+        this.staffNo = staffNo;
         this.email = email;
         this.password = password;
         this.department = department;
@@ -46,12 +46,12 @@ public class Lecturer implements Serializable {
         this.fullName = fullName;
     }
 
-    public String getLecturer_id() {
-        return lecturer_id;
+    public String getstaffNo() {
+        return staffNo;
     }
 
-    public void setLecturer_id(String lecturer_id) {
-        this.lecturer_id = lecturer_id;
+    public void setstaffNo(String staffNo) {
+        this.staffNo = staffNo;
     }
 
     public String getEmail() {
