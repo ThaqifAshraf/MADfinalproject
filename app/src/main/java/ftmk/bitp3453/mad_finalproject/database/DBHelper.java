@@ -41,20 +41,31 @@ public class DBHelper extends SQLiteOpenHelper {
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "lecturer_id INTEGER," +
                 "subject_id INTEGER," +
-                "FOREIGN KEY (lecturer_id) REFERENCES LECTURER_TABLE(id))";
+                "FOREIGN KEY (lecturer_id) REFERENCES LECTURER_TABLE(id)," +
+                "FOREIGN KEY (subject_id) REFERENCES SUBJECT_TABLE(id))";
 
         String createBridgeTableStudentClass = "CREATE TABLE STUDENT_CLASS_TABLE (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "student_id INTEGER," +
                 "class_id INTEGER," +
-                "FOREIGN KEY (class_id) REFERENCES LECTURER_TABLE(id))";
+                "FOREIGN KEY (class_id) REFERENCES CLASS_TABLE(id)," +
+                "FOREIGN KEY (student_id) REFERENCES STUDENT_TABLE(id))";
 
         db.execSQL(createTableStudent);
+        db.execSQL(createTableLecturer);
+        db.execSQL(createTableSubject);
+        db.execSQL(createBridgeTableClass);
+        db.execSQL(createBridgeTableStudentClass);
 
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        db.execSQL("DROP TABLE IF EXISTS STUDENT_CLASS_TABLE;");
+        db.execSQL("DROP TABLE IF EXISTS CLASS_TABLE;");
+        db.execSQL("DROP TABLE IF EXISTS SUBJECT_TABLE;");
+        db.execSQL("DROP TABLE IF EXISTS LECTURER_TABLE;");
+        db.execSQL("DROP TABLE IF EXISTS STUDENT_TABLE;");
+        onCreate(db);
     }
 }
