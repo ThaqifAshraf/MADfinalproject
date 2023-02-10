@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:itemTextAppearance="@color/black">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_attendance"
+            android:title="Attendance" />
+        <item
+            android:id="@+id/nav_subject"
+            android:title="Subjects" />
+    </group>
+
+    <item
+        android:id="@+id/nav_logout"
+        android:title="Logout" />
+</menu>

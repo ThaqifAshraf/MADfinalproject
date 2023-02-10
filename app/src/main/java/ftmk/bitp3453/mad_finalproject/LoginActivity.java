@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         // Perform login logic here, such as checking against a database or making a network request
 
         // For example, assume the login is successful
-        EditText usernameInput = findViewById(R.id.username_input);
+/*        EditText usernameInput = findViewById(R.id.username_input);
         EditText passwordInput = findViewById(R.id.password_input);
 
         if (username.startsWith("S")) {
@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Invalid username. Please try again.", Toast.LENGTH_SHORT).show();
         }
-
+*/
     }
 
     public void onSignUpButtonClicked(View view) {
