@@ -11,11 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
+import ftmk.bitp3453.mad_finalproject.entities.Attendance;
 import ftmk.bitp3453.mad_finalproject.entities.Class;
 import ftmk.bitp3453.mad_finalproject.entities.Lecturer;
 import ftmk.bitp3453.mad_finalproject.entities.Student;
+import ftmk.bitp3453.mad_finalproject.entities.StudentAttendance;
 import ftmk.bitp3453.mad_finalproject.entities.Subject;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -62,11 +66,27 @@ public class DBHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY (class_id) REFERENCES CLASS_TABLE(id)," +
                 "FOREIGN KEY (student_id) REFERENCES STUDENT_TABLE(id))";
 
+        String createAttendanceTable = "CREATE TABLE ATTENDANCE_TABLE (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "class_id INTEGER," +
+                "time INTEGER," +
+                "FOREIGN KEY (class_id) REFERENCES CLASS_TABLE(id))";
+
+        String createStudentAttendanceTable = "CREATE TABLE STUDENT_ATTENDANCE_TABLE (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "student_id INTEGER," +
+                "attendance_id INTEGER," +
+                "time INTEGER," +
+                "FOREIGN KEY (attendance_id) REFERENCES ATTENDANCE_TABLE(id)," +
+                "FOREIGN KEY (student_id) REFERENCES STUDENT_TABLE(id))";
+
         db.execSQL(createTableStudent);
         db.execSQL(createTableLecturer);
         db.execSQL(createTableSubject);
         db.execSQL(createBridgeTableClass);
         db.execSQL(createBridgeTableStudentClass);
+        db.execSQL(createAttendanceTable);
+        db.execSQL(createStudentAttendanceTable);
 
     }
 
@@ -77,6 +97,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS SUBJECT_TABLE;");
         db.execSQL("DROP TABLE IF EXISTS LECTURER_TABLE;");
         db.execSQL("DROP TABLE IF EXISTS STUDENT_TABLE;");
+        db.execSQL("DROP TABLE IF EXISTS ATTENDANCE_TABLE;");
+        db.execSQL("DROP TABLE IF EXISTS STUDENT_ATTENDANCE_TABLE;");
+
         onCreate(db);
     }
 
@@ -164,6 +187,39 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("class_id", classId);
 
         return db.insert("STUDENT_CLASS_TABLE", null, cv);
+    }
+
+    /**
+     * Add a new Attendance into the database.
+     * @param attendance    An Attendance object that doesn't have an existing id.
+     * @return  The row id of the new Attendance from the database.
+     */
+    public long addAttendance(Attendance attendance){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("class_id", attendance.getClass_id());
+        cv.put("time", attendance.getDatetime().getTimeInMillis());
+
+        return db.insert("ATTENDANCE_TABLE", null, cv);
+    }
+
+    /**
+     * Add a new Student Attendance into the database.
+     * @param student   A Student object with an existing id.
+     * @param attendance    An Attendance object with an existing id.
+     * @param time  A Calendar object that holds the datetime the
+     *              student submitted the attendance.
+     * @return The row id of the new Student Attendance row.
+     */
+    public long addStudentAttendance(Student student, Attendance attendance, Calendar time){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        String status = "-";
+        cv.put("student_id", student.getId());
+        cv.put("attendance_id", attendance.getId());
+        cv.put("time", time.getTimeInMillis());
+
+        return db.insert("STUDENT_ATTENDANCE_TABLE", null, cv);
     }
 
     /**
@@ -393,6 +449,59 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return classes;
+    }
+
+    /**
+     * Gets a List of Attendances for a class
+     * @param classId The row ID of an existing Class
+     * @return A list of Attendances based on the provided class ID
+     */
+    @SuppressLint("Range")
+    public List<Attendance> getAttendances(int classId) {
+        List<Attendance> attendances = null;
+        Attendance holder;
+        Calendar calHolder = new GregorianCalendar();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM ATTENDANCE_TABLE " +
+                "WHERE class_id=" + classId + ")";
+        Cursor cursor = db.rawQuery(query, null);
+        while(cursor.moveToNext()){
+            int id = cursor.getInt(cursor.getColumnIndex("id"));
+            int time = cursor.getInt(cursor.getColumnIndex("time"));
+            calHolder.setTimeInMillis(time);
+            holder = new Attendance(classId, id, calHolder);
+            attendances.add(holder);
+        }
+        cursor.close();
+        db.close();
+        return attendances;
+    }
+
+    /**
+     * Gets a List of Student Attendances for an Attendance
+     * @param attendanceId The row ID of an existing Attendance
+     * @return  A list of Student Attendance based on the provided attendance ID
+     */
+    @SuppressLint("Range")
+    public List<StudentAttendance> getStudentAttendances(int attendanceId) {
+        List<StudentAttendance> attendances = null;
+        StudentAttendance holder;
+        Calendar calHolder = new GregorianCalendar();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM STUDENT_ATTENDANCE_TABLE " +
+                "WHERE attendance_id=" + attendanceId + ")";
+        Cursor cursor = db.rawQuery(query, null);
+        while(cursor.moveToNext()){
+            int id = cursor.getInt(cursor.getColumnIndex("id"));
+            int studentId = cursor.getInt(cursor.getColumnIndex("student_id"));
+            int time = cursor.getInt(cursor.getColumnIndex("time"));
+            calHolder.setTimeInMillis(time);
+            holder = new StudentAttendance(id, studentId, attendanceId, calHolder);
+            attendances.add(holder);
+        }
+        cursor.close();
+        db.close();
+        return attendances;
     }
 
     /**
