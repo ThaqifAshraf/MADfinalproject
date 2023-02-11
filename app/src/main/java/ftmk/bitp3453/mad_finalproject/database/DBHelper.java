@@ -103,7 +103,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    /**
+    /*
      * ADD TO DATABASE METHODS
      */
 
@@ -222,7 +222,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.insert("STUDENT_ATTENDANCE_TABLE", null, cv);
     }
 
-    /**
+    /*
      * RETRIEVE FROM DATABASE METHOD
      */
 
@@ -504,7 +504,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return attendances;
     }
 
-    /**
+    /*
      * LOGICAL OPERATIONS
      */
 
@@ -517,5 +517,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public Boolean isStudent(String email, String password){
         return getStudent(email, password) != null;
     }
+
+    //comment to commit
 
 }
